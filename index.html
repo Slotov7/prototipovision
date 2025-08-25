@@ -1,162 +1,57 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>VisionHealth – Captura</title>
-<style>
-  :root{ --bg:#eaf3ff; --ink:#0c2a63; --ink2:#1d3e8a; --muted:#6b7280; }
-  *{ box-sizing:border-box }
-  html,body{ height:100%; margin:0; background:var(--bg); color:var(--ink);
-    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif }
-  .wrap{ min-height:100svh; display:flex; align-items:center; justify-content:center;
-    padding:16px; }
-  .phone{ width:min(480px,100%); background:linear-gradient(#eaf3ff,#dfeefe);
-    border-radius:20px; box-shadow:0 10px 32px rgba(0,0,0,.15); padding:14px; }
-  .title{ text-align:center; text-shadow:0 1px 0 rgba(255,255,255,.7) }
-  .title .t1{ font-weight:800; font-size:20px; line-height:1.2 }
-  .title .t2{ font-weight:700; font-size:16px; margin-top:4px }
-
-  /* vídeo */
-  .camera{ position:relative; margin-top:10px; border-radius:16px; overflow:hidden; background:#cfe1ff }
-  video{ width:100%; height:60svh; max-height:62vh; display:block; object-fit:cover; background:#cfe1ff }
-  /* mira (não bloqueia cliques) */
-  .aim{ pointer-events:none; position:absolute; inset:0; display:grid; place-items:center }
-  .outer{ width:min(70%, 340px); aspect-ratio:1/1; border-radius:50%;
-    outline:3px solid rgba(12,42,99,.9); outline-offset:-3px }
-  .inner{ position:absolute; width:min(38%, 180px); aspect-ratio:1/1; border:3px dashed rgba(12,42,99,.7);
-    border-radius:50% }
-
-  /* CONTROLES — ficam abaixo do vídeo em fluxo normal */
-  .controls{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; justify-content:center }
-  .btn{ height:46px; padding:0 16px; border-radius:12px; border:2px solid var(--ink2);
-    background:var(--ink2); color:#fff; font-weight:700; cursor:pointer }
-  .btn.secondary{ background:#fff; color:var(--ink2) }
-  .btn:disabled{ opacity:.5; cursor:not-allowed }
-
-  /* mensagens / foto */
-  .toast{ text-align:center; margin-top:10px; font-size:13px; color:#fff; background:#111827;
-    padding:8px 12px; border-radius:10px; display:none }
-  .photo{ margin-top:12px; display:none }
-  canvas{ display:block; width:100%; max-height:60vh; background:#000; border-radius:12px }
-  a.btn-link{ display:inline-block; text-decoration:none }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionHealth</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <div class="wrap">
-    <div class="phone">
-      <div class="title">
-        <div class="t1">Aproxime o olho até preencher o círculo</div>
-        <div class="t2">Mantenha-se estável e olhe para o ponto</div>
-      </div>
 
-      <div class="camera">
-        <video id="video" playsinline autoplay muted></video>
-        <div class="aim">
-          <div class="outer"></div>
-          <div class="inner"></div>
+    <div class="phone-container">
+        
+        <header class="instructions">
+            <h1>Aproxime o olho ate preencher o circulo</h1>
+            <p>Mantenha-se estável e olhe para o ponto</p>
+        </header>
+
+        <div class="info-icons">
+            <div class="info-item">
+                <i class="fa-regular fa-lightbulb"></i>
+                <span>Iluminação adequada</span>
+            </div>
+            <div class="info-item">
+                <i class="fa-regular fa-eye-slash"></i>
+                <span>Sem reflexo</span>
+            </div>
         </div>
-      </div>
 
-      <div class="controls">
-        <button id="start" class="btn">Ativar câmera</button>
-        <button id="flip" class="btn secondary" disabled>Alternar câmera</button>
-        <button id="capture" class="btn secondary" disabled>Capturar</button>
-        <a id="download" class="btn secondary btn-link" download="captura-visionhealth.jpg" style="display:none">Baixar</a>
-      </div>
+        <div class="camera-frame">
+            <div class="dotted-circle"></div>
+            <video id="camera-feed" autoplay playsinline></video>
+        </div>
 
-      <div id="toast" class="toast"></div>
-      <div class="photo"><canvas id="photo"></canvas></div>
+        <div class="app-info">
+            <div class="logo">
+                <i class="fa-regular fa-eye"></i>
+                <span>VisionHealth</span>
+            </div>
+            <div class="voice-guide">
+                <i class="fa-solid fa-volume-high"></i>
+                <span>Guia de voz: Ativo</span>
+            </div>
+        </div>
+        
+        <footer class="controls">
+            <i class="fa-regular fa-image"></i>
+            <div class="shutter-button"></div>
+            <i class="fa-solid fa-bolt"></i>
+        </footer>
+
     </div>
-  </div>
 
-<script>
-(() => {
-  const video = document.getElementById('video');
-  const startBtn = document.getElementById('start');
-  const flipBtn  = document.getElementById('flip');
-  const capBtn   = document.getElementById('capture');
-  const dl       = document.getElementById('download');
-  const toast    = document.getElementById('toast');
-  const canvas   = document.getElementById('photo');
-  const photoBox = document.querySelector('.photo');
+    <script src="script.js"></script>
 
-  let stream = null, devices = [], index = 0;
-
-  const isSecure = () => (location.protocol === 'https:' || location.hostname === 'localhost');
-  const msg = (t,ms=2500)=>{ toast.textContent=t; toast.style.display='block'; setTimeout(()=>toast.style.display='none',ms); };
-
-  async function enumerate(){
-    const all = await navigator.mediaDevices.enumerateDevices();
-    devices = all.filter(d => d.kind === 'videoinput');
-    flipBtn.disabled = devices.length < 2;
-  }
-
-  async function startWith(constraints){
-    stream = await navigator.mediaDevices.getUserMedia({ video:constraints, audio:false });
-    video.srcObject = stream;
-    video.muted = true; video.playsInline = true;
-    await video.play(); // iOS precisa
-    capBtn.disabled = false;
-    await enumerate();
-
-    const tr = stream.getVideoTracks()[0];
-    const id = tr.getSettings().deviceId;
-    if (id){
-      const i = devices.findIndex(d => d.deviceId === id);
-      index = i >= 0 ? i : 0;
-    }
-  }
-
-  async function startBest(){
-    if(!isSecure()){ msg('Abra via HTTPS (ou http://localhost).'); return; }
-    try{
-      await startWith({ facingMode:{ exact:'environment' }, width:{ideal:1280}, height:{ideal:720} });
-    }catch{
-      await startWith({ facingMode:{ ideal:'user' }, width:{ideal:1280}, height:{ideal:720} });
-    }
-    startBtn.disabled = true;
-    msg('Câmera ativada.');
-  }
-
-  async function flip(){
-    if(devices.length < 2) return;
-    index = (index + 1) % devices.length;
-    const devId = devices[index].deviceId;
-    await stop();
-    await startWith({ deviceId:{ exact: devId } });
-  }
-
-  function stop(){
-    if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
-  }
-
-  function capture(){
-    if(!stream){ msg('Ative a câmera primeiro.'); return; }
-    const w = video.videoWidth||1280, h = video.videoHeight||720;
-    const s = Math.min(w,h), sx=(w-s)/2, sy=(h-s)/2;
-    canvas.width = s; canvas.height = s;
-    const ctx = canvas.getContext('2d');
-    // espelha (combina com preview). Remova translate/scale para não espelhar.
-    ctx.save(); ctx.translate(s,0); ctx.scale(-1,1);
-    ctx.drawImage(video, sx,sy,s,s, 0,0,s,s);
-    ctx.restore();
-    photoBox.style.display = 'block';
-    dl.href = canvas.toDataURL('image/jpeg', .92);
-    dl.style.display = 'inline-block';
-    msg('Foto capturada. Toque em Baixar.');
-  }
-
-  // eventos
-  startBtn.addEventListener('click', startBest);
-  flipBtn.addEventListener('click', flip);
-  capBtn.addEventListener('click', capture);
-
-  if(!('mediaDevices' in navigator)) msg('Este navegador não suporta câmera.');
-  else if(!isSecure()) msg('Dica: em celular, precisa de HTTPS (ou localhost).');
-
-  navigator.mediaDevices.addEventListener?.('devicechange', enumerate);
-})();
-</script>
 </body>
 </html>

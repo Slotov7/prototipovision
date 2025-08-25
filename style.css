@@ -1,0 +1,138 @@
+/* Importando uma fonte do Google para se aproximar do design */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Configurações gerais */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+}
+
+/* Container principal que simula a tela */
+.phone-container {
+    width: 375px;
+    height: 812px;
+    background-color: #e0f2fe; /* Azul bem claro */
+    border-radius: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Textos de instrução no topo */
+.instructions {
+    text-align: center;
+    color: #023047;
+}
+
+.instructions h1 {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.instructions p {
+    font-size: 16px;
+    margin-top: 0;
+}
+
+/* Ícones de informação (iluminação e reflexo) */
+.info-icons {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin: 20px 0;
+    color: #3d5a80;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.info-item i {
+    margin-right: 8px;
+}
+
+/* Círculo da Câmera - A parte mais importante! */
+.camera-frame {
+    width: 250px;
+    height: 250px;
+    border: 6px solid #0077b6; /* Borda azul externa */
+    border-radius: 50%; /* Transforma o quadrado em círculo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-color: #ccc;
+    overflow: hidden; /* Esconde tudo que sair dos limites do círculo */
+    margin-top: 30px;
+}
+
+/* Vídeo dentro do círculo */
+#camera-feed {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Garante que o vídeo preencha o círculo sem distorcer */
+    transform: scaleX(-1); /* Espelha a imagem da câmera (comum em selfies) */
+}
+
+/* Círculo pontilhado interno */
+.dotted-circle {
+    width: 60%;
+    height: 60%;
+    border: 3px dashed #adc8d6;
+    border-radius: 50%;
+    position: absolute;
+}
+
+/* Informações do App (Logo e Guia de Voz) */
+.app-info {
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+    color: #023047;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.voice-guide i {
+    margin-right: 8px;
+}
+
+/* Controles inferiores */
+.controls {
+    position: absolute;
+    bottom: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.controls i {
+    font-size: 28px;
+    color: #3d5a80;
+}
+
+.shutter-button {
+    width: 70px;
+    height: 70px;
+    background-color: #fdfdfd;
+    border-radius: 50%;
+    border: 4px solid #ccc;
+}
