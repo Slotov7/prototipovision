@@ -9,173 +9,153 @@
   *{ box-sizing:border-box }
   html,body{ height:100%; margin:0; background:var(--bg); color:var(--ink);
     font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif }
-  .app{ min-height:100svh; display:flex; align-items:center; justify-content:center;
-    padding:calc(env(safe-area-inset-top,0px) + 12px) 12px calc(env(safe-area-inset-bottom,0px) + 12px) }
-  .phone{
-    width:min(440px,100%); height:calc(100svh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 24px);
-    max-height:956px; background:linear-gradient(#eaf3ff,#dfeefe);
-    border-radius:28px; box-shadow:0 8px 30px rgba(0,0,0,.15); position:relative; overflow:hidden;
-  }
+  .wrap{ min-height:100svh; display:flex; align-items:center; justify-content:center;
+    padding:16px; }
+  .phone{ width:min(480px,100%); background:linear-gradient(#eaf3ff,#dfeefe);
+    border-radius:20px; box-shadow:0 10px 32px rgba(0,0,0,.15); padding:14px; }
+  .title{ text-align:center; text-shadow:0 1px 0 rgba(255,255,255,.7) }
+  .title .t1{ font-weight:800; font-size:20px; line-height:1.2 }
+  .title .t2{ font-weight:700; font-size:16px; margin-top:4px }
 
-  .content{ position:absolute; inset:0; display:flex; flex-direction:column; }
-  .top{ padding:16px 14px 8px; text-align:center; text-shadow:0 1px 0 rgba(255,255,255,.7); z-index:2 }
-  .t1{ font-weight:800; font-size:20px; line-height:1.2 }
-  .t2{ font-weight:700; font-size:16px }
+  /* vídeo */
+  .camera{ position:relative; margin-top:10px; border-radius:16px; overflow:hidden; background:#cfe1ff }
+  video{ width:100%; height:60svh; max-height:62vh; display:block; object-fit:cover; background:#cfe1ff }
+  /* mira (não bloqueia cliques) */
+  .aim{ pointer-events:none; position:absolute; inset:0; display:grid; place-items:center }
+  .outer{ width:min(70%, 340px); aspect-ratio:1/1; border-radius:50%;
+    outline:3px solid rgba(12,42,99,.9); outline-offset:-3px }
+  .inner{ position:absolute; width:min(38%, 180px); aspect-ratio:1/1; border:3px dashed rgba(12,42,99,.7);
+    border-radius:50% }
 
-  .camera-wrap{ position:relative; margin:8px 12px; border-radius:18px; overflow:hidden; background:#cfe1ff; flex:1; }
-  video#preview{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform:scaleX(-1); background:#cfe1ff }
+  /* CONTROLES — ficam abaixo do vídeo em fluxo normal */
+  .controls{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; justify-content:center }
+  .btn{ height:46px; padding:0 16px; border-radius:12px; border:2px solid var(--ink2);
+    background:var(--ink2); color:#fff; font-weight:700; cursor:pointer }
+  .btn.secondary{ background:#fff; color:var(--ink2) }
+  .btn:disabled{ opacity:.5; cursor:not-allowed }
 
-  /* overlay de mira (NÃO recebe clique) */
-  .overlay{ position:absolute; inset:0; pointer-events:none; z-index:1; }
-  .aim{ position:absolute; inset:0; display:grid; place-items:center }
-  .outer{ width:min(70%, 340px); aspect-ratio:1/1; border-radius:50%; outline:3px solid rgba(12,42,99,.9); outline-offset:-3px }
-  .inner{ position:absolute; width:min(38%, 180px); aspect-ratio:1/1; border:3px dashed rgba(12,42,99,.7); border-radius:50% }
-
-  .brand-voice{ position:absolute; left:0; right:0; bottom:88px; display:flex; flex-direction:column; align-items:center; gap:6px; z-index:2 }
-  .brand{ display:flex; align-items:center; gap:8px; font-weight:800; letter-spacing:.3px }
-  .brand span{ color:#0ea5a8 }
-  .voice{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted);
-    background:rgba(255,255,255,.9); padding:6px 10px; border-radius:999px; border:1px solid #334155 }
-
-  /* AÇÕES: fora do overlay e clicável */
-  .actions{
-    position:absolute; left:0; right:0; bottom:16px;
-    display:flex; justify-content:center; gap:12px; z-index:3; pointer-events:auto;
-  }
-  .pill{ border-radius:999px; border:2px solid var(--ink2); padding:10px 16px; font-weight:700; cursor:pointer }
-  .primary{ background:var(--ink2); color:#fff }
-  .secondary{ background:#fff; color:var(--ink2) }
-  .hidden{ display:none }
-
-  /* preview de captura + toast */
-  .shot{ position:absolute; inset:64px 12px 120px 12px; border-radius:16px; overflow:hidden;
-    background:#0009; display:none; align-items:center; justify-content:center; z-index:4 }
-  .shot canvas{ max-width:100%; max-height:100% }
-  .toast{ position:absolute; left:50%; transform:translateX(-50%); bottom:120px; z-index:5;
-    background:#111827; color:#fff; padding:8px 12px; border-radius:10px; font-size:13px; display:none }
+  /* mensagens / foto */
+  .toast{ text-align:center; margin-top:10px; font-size:13px; color:#fff; background:#111827;
+    padding:8px 12px; border-radius:10px; display:none }
+  .photo{ margin-top:12px; display:none }
+  canvas{ display:block; width:100%; max-height:60vh; background:#000; border-radius:12px }
+  a.btn-link{ display:inline-block; text-decoration:none }
 </style>
 </head>
 <body>
-  <div class="app">
+  <div class="wrap">
     <div class="phone">
-      <div class="content">
-        <div class="top">
-          <div class="t1">Aproxime o olho até preencher o círculo</div>
-          <div class="t2">Mantenha-se estável e olhe para o ponto</div>
-        </div>
+      <div class="title">
+        <div class="t1">Aproxime o olho até preencher o círculo</div>
+        <div class="t2">Mantenha-se estável e olhe para o ponto</div>
+      </div>
 
-        <div class="camera-wrap">
-          <video id="preview" playsinline autoplay muted></video>
-
-          <!-- overlay só de mira (sem botões) -->
-          <div class="overlay" aria-hidden="true">
-            <div class="aim">
-              <div class="outer"></div>
-              <div class="inner"></div>
-            </div>
-          </div>
-
-          <!-- brand + voice (clicáveis) -->
-          <div class="brand-voice">
-            <div class="brand">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z" /><circle cx="12" cy="12" r="3.2" /></svg>
-              Vision <span>Health</span>
-            </div>
-            <button id="voiceBtn" class="voice" type="button" aria-pressed="true" title="Guia de voz">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"><path d="M11 5a3 3 0 0 1 6 0v6a3 3 0 0 1-6 0V5Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg>
-              Guia de voz: <strong id="voiceState">Ativo</strong>
-            </button>
-          </div>
-
-          <!-- preview da captura -->
-          <div id="shot" class="shot"><canvas id="photo"></canvas></div>
-          <div id="toast" class="toast" role="status" aria-live="polite"></div>
-        </div>
-
-        <!-- BOTÕES (fora do overlay) -->
-        <div class="actions">
-          <button id="startBtn" class="pill primary" type="button">Ativar câmera</button>
-          <button id="captureBtn" class="pill secondary" type="button" disabled>Capturar</button>
-          <a id="downloadLink" class="pill secondary hidden" download="captura-visionhealth.jpg">Baixar</a>
+      <div class="camera">
+        <video id="video" playsinline autoplay muted></video>
+        <div class="aim">
+          <div class="outer"></div>
+          <div class="inner"></div>
         </div>
       </div>
+
+      <div class="controls">
+        <button id="start" class="btn">Ativar câmera</button>
+        <button id="flip" class="btn secondary" disabled>Alternar câmera</button>
+        <button id="capture" class="btn secondary" disabled>Capturar</button>
+        <a id="download" class="btn secondary btn-link" download="captura-visionhealth.jpg" style="display:none">Baixar</a>
+      </div>
+
+      <div id="toast" class="toast"></div>
+      <div class="photo"><canvas id="photo"></canvas></div>
     </div>
   </div>
 
 <script>
 (() => {
-  const preview = document.getElementById('preview');
-  const startBtn = document.getElementById('startBtn');
-  const captureBtn = document.getElementById('captureBtn');
-  const downloadLink = document.getElementById('downloadLink');
-  const shot = document.getElementById('shot');
-  const photoCanvas = document.getElementById('photo');
-  const toast = document.getElementById('toast');
-  const voiceBtn = document.getElementById('voiceBtn');
-  const voiceState = document.getElementById('voiceState');
+  const video = document.getElementById('video');
+  const startBtn = document.getElementById('start');
+  const flipBtn  = document.getElementById('flip');
+  const capBtn   = document.getElementById('capture');
+  const dl       = document.getElementById('download');
+  const toast    = document.getElementById('toast');
+  const canvas   = document.getElementById('photo');
+  const photoBox = document.querySelector('.photo');
 
-  let stream=null, track=null, voiceOn=true;
+  let stream = null, devices = [], index = 0;
 
-  const tip = (m,ms=2200)=>{ toast.textContent=m; toast.style.display='block'; setTimeout(()=>toast.style.display='none',ms); };
-  const speak = (t)=>{ if(!voiceOn) return; try{ const u=new SpeechSynthesisUtterance(t); u.lang='pt-BR'; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(_){} };
-  const isSecure = ()=> (location.protocol==='https:' || location.hostname==='localhost');
+  const isSecure = () => (location.protocol === 'https:' || location.hostname === 'localhost');
+  const msg = (t,ms=2500)=>{ toast.textContent=t; toast.style.display='block'; setTimeout(()=>toast.style.display='none',ms); };
 
-  async function startCamera(){
-    try{
-      if(!isSecure()){ tip('Abra via HTTPS ou localhost.'); return; }
-      // tenta traseira; se falhar, frontal
-      try{
-        stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:{ exact:'environment' }, width:{ideal:1280}, height:{ideal:720} }, audio:false });
-      }catch(_){
-        stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:{ ideal:'user' }, width:{ideal:1280}, height:{ideal:720} }, audio:false });
-      }
-      preview.srcObject = stream;
-      preview.muted = true; preview.playsInline = true;
-      await preview.play(); // iOS precisa
-      track = stream.getVideoTracks()[0];
+  async function enumerate(){
+    const all = await navigator.mediaDevices.enumerateDevices();
+    devices = all.filter(d => d.kind === 'videoinput');
+    flipBtn.disabled = devices.length < 2;
+  }
 
-      startBtn.disabled = true;
-      captureBtn.disabled = false;
-      tip('Câmera ativada.');
-      speak('Câmera ativada. Aproxime o olho até preencher o círculo.');
-    }catch(err){
-      console.error(err);
-      if(err.name==='NotAllowedError') tip('Permissão negada. Libere a câmera no navegador.');
-      else if(err.name==='NotFoundError') tip('Nenhuma câmera disponível.');
-      else if(err.name==='NotReadableError') tip('Câmera ocupada por outro app.');
-      else tip('Falha ao iniciar a câmera.');
+  async function startWith(constraints){
+    stream = await navigator.mediaDevices.getUserMedia({ video:constraints, audio:false });
+    video.srcObject = stream;
+    video.muted = true; video.playsInline = true;
+    await video.play(); // iOS precisa
+    capBtn.disabled = false;
+    await enumerate();
+
+    const tr = stream.getVideoTracks()[0];
+    const id = tr.getSettings().deviceId;
+    if (id){
+      const i = devices.findIndex(d => d.deviceId === id);
+      index = i >= 0 ? i : 0;
     }
   }
 
-  function captureFrame(){
-    if(!stream){ tip('Ative a câmera primeiro.'); return; }
-    const w = preview.videoWidth||1280, h = preview.videoHeight||720;
-    const s = Math.min(w,h), sx=(w-s)/2, sy=(h-s)/2;
-    photoCanvas.width=s; photoCanvas.height=s;
-    const ctx = photoCanvas.getContext('2d');
-    ctx.save(); ctx.translate(s,0); ctx.scale(-1,1); // espelho p/ combinar com preview
-    ctx.drawImage(preview, sx,sy,s,s, 0,0,s,s);
-    ctx.restore();
-    shot.style.display='flex';
-    downloadLink.classList.remove('hidden');
-    downloadLink.href = photoCanvas.toDataURL('image/jpeg', .92);
-    tip('Foto capturada. Toque em Baixar.');
+  async function startBest(){
+    if(!isSecure()){ msg('Abra via HTTPS (ou http://localhost).'); return; }
+    try{
+      await startWith({ facingMode:{ exact:'environment' }, width:{ideal:1280}, height:{ideal:720} });
+    }catch{
+      await startWith({ facingMode:{ ideal:'user' }, width:{ideal:1280}, height:{ideal:720} });
+    }
+    startBtn.disabled = true;
+    msg('Câmera ativada.');
   }
 
-  function hideShot(){ shot.style.display='none'; downloadLink.classList.add('hidden'); }
+  async function flip(){
+    if(devices.length < 2) return;
+    index = (index + 1) % devices.length;
+    const devId = devices[index].deviceId;
+    await stop();
+    await startWith({ deviceId:{ exact: devId } });
+  }
+
+  function stop(){
+    if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+  }
+
+  function capture(){
+    if(!stream){ msg('Ative a câmera primeiro.'); return; }
+    const w = video.videoWidth||1280, h = video.videoHeight||720;
+    const s = Math.min(w,h), sx=(w-s)/2, sy=(h-s)/2;
+    canvas.width = s; canvas.height = s;
+    const ctx = canvas.getContext('2d');
+    // espelha (combina com preview). Remova translate/scale para não espelhar.
+    ctx.save(); ctx.translate(s,0); ctx.scale(-1,1);
+    ctx.drawImage(video, sx,sy,s,s, 0,0,s,s);
+    ctx.restore();
+    photoBox.style.display = 'block';
+    dl.href = canvas.toDataURL('image/jpeg', .92);
+    dl.style.display = 'inline-block';
+    msg('Foto capturada. Toque em Baixar.');
+  }
 
   // eventos
-  startBtn.addEventListener('click', startCamera);
-  captureBtn.addEventListener('click', captureFrame);
-  shot.addEventListener('click', hideShot);
-  voiceBtn.addEventListener('click', ()=>{
-    voiceOn = !voiceOn;
-    voiceState.textContent = voiceOn ? 'Ativo' : 'Inativo';
-    voiceBtn.setAttribute('aria-pressed', String(voiceOn));
-    tip(`Guia de voz ${voiceOn ? 'ativado' : 'desativado'}`);
-  });
+  startBtn.addEventListener('click', startBest);
+  flipBtn.addEventListener('click', flip);
+  capBtn.addEventListener('click', capture);
 
-  if(!('mediaDevices' in navigator)) tip('Navegador não suporta câmera.');
+  if(!('mediaDevices' in navigator)) msg('Este navegador não suporta câmera.');
+  else if(!isSecure()) msg('Dica: em celular, precisa de HTTPS (ou localhost).');
+
+  navigator.mediaDevices.addEventListener?.('devicechange', enumerate);
 })();
 </script>
 </body>
