@@ -29,3 +29,4 @@ document.addEventListener('DOMContentLoaded', () => {
         alert("Seu navegador não suporta o acesso à câmera.");
     }
 });  
+
