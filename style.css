@@ -58,7 +58,7 @@ body {
     display: flex; /* Torna a tela visível e ativa a centralização */
 }
 
-.screen-logo { width: 400px; margin-bottom: 24px; }
+.screen-logo { width: 300px; margin-bottom: 24px; }
 .loading-screen p, .complete-screen p { font-size: 20px; line-height: 1.5; margin-bottom: 15px; max-width: 85%; }
 .loading-screen .subtitle, .complete-screen .subtitle { font-size: 16px; color: #3d5a80; }
 .complete-screen h1 { font-size: 28px; color: #0077b6; margin-bottom: 8px; }
