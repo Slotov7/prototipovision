@@ -11,47 +11,58 @@
 
     <div class="phone-container">
         
-        <header class="instructions">
-            <h1>Aproxime o olho ate preencher o circulo</h1>
-            <p>Mantenha-se estável e olhe para o ponto</p>
-        </header>
+        <div class="camera-content" id="cameraContent">
+            <header class="instructions">
+                <h1>Aproxime o olho ate preencher o circulo</h1>
+                <p>Mantenha-se estável e olhe para o ponto</p>
+            </header>
 
-        <div class="info-icons">
-            <div class="info-item">
-                <i class="fa-regular fa-lightbulb"></i>
-                <span>Iluminação adequada</span>
+            <div class="info-icons">
+                <div class="info-item">
+                    <i class="fa-regular fa-lightbulb"></i>
+                    <span>Iluminação adequada</span>
+                </div>
+                <div class="info-item">
+                    <i class="fa-regular fa-eye-slash"></i>
+                    <span>Sem reflexo</span>
+                </div>
             </div>
-            <div class="info-item">
-                <i class="fa-regular fa-eye-slash"></i>
-                <span>Sem reflexo</span>
+
+            <div class="camera-frame">
+                <div class="dotted-circle"></div>
+                <video id="camera-feed" autoplay playsinline></video>
             </div>
+
+            <div class="app-info">
+                <div class="logo">
+                    <i class="fa-regular fa-eye"></i>
+                    <span>VisionHealth</span>
+                </div>
+                <div class="voice-guide">
+                    <i class="fa-solid fa-volume-high"></i>
+                    <span>Guia de voz: Ativo</span>
+                </div>
+            </div>
+            
+            <footer class="controls">
+                <i class="fa-regular fa-image"></i>
+                <div class="shutter-button"></div>
+                <i class="fa-solid fa-bolt"></i>
+            </footer>
+        </div> <div class="loading-screen" id="loadingScreen">
+            <img src="logo-visionhealth.png" alt="Logo VisionHealth" class="screen-logo">
+            <p>Recebemos suas imagens e estamos analisando. Aguarde...</p>
+            <p class="subtitle">Nossa equipe está sempre trabalhando para te atender melhor!</p>
         </div>
 
-        <div class="camera-frame">
-            <div class="dotted-circle"></div>
-            <video id="camera-feed" autoplay playsinline></video>
+        <div class="complete-screen" id="completeScreen">
+            <img src="logo-visionhealth.png" alt="Logo VisionHealth" class="screen-logo">
+            <h1>Análise Concluída!</h1>
+            <p class="subtitle">Em breve você receberá o resultado.</p>
+            <button id="restartButton" class="restart-button">Voltar ao Início</button>
         </div>
 
-        <div class="app-info">
-            <div class="logo">
-                <i class="fa-regular fa-eye"></i>
-                <span>VisionHealth</span>
-            </div>
-            <div class="voice-guide">
-                <i class="fa-solid fa-volume-high"></i>
-                <span>Guia de voz: Ativo</span>
-            </div>
-        </div>
-        
-        <footer class="controls">
-            <i class="fa-regular fa-image"></i>
-            <div class="shutter-button"></div>
-            <i class="fa-solid fa-bolt"></i>
-        </footer>
-
-    </div>
-
-    <script src="script.js"></script>
+    </div> <script src="script.js"></script>
 
 </body>
 </html>

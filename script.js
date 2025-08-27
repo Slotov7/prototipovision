@@ -1,31 +1,51 @@
-// Espera o documento HTML ser completamente carregado para executar o código.
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Pega o elemento de vídeo pelo seu ID. É aqui que a imagem da câmera vai aparecer.
+    // Pega os elementos da tela da câmera
     const videoElement = document.getElementById('camera-feed');
+    const shutterButton = document.querySelector('.shutter-button');
+    const cameraContent = document.getElementById('cameraContent');
 
-    // Verifica se o navegador do usuário suporta a API de mídia (necessária para acessar a câmera).
+    // Pega os elementos das telas de transição
+    const loadingScreen = document.getElementById('loadingScreen');
+    const completeScreen = document.getElementById('completeScreen');
+    const restartButton = document.getElementById('restartButton');
+
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        
-        // Se suportar, pede permissão para usar a câmera de vídeo.
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
-                // Se o usuário der permissão, o 'stream' (fluxo de vídeo) é recebido.
-                
-                // Define o fluxo de vídeo como a fonte do nosso elemento <video>.
                 videoElement.srcObject = stream;
-                
-                // Tenta iniciar a reprodução do vídeo.
                 videoElement.play();
             })
             .catch((error) => {
-                // Se o usuário negar a permissão ou ocorrer um erro, mostramos no console.
                 console.error("Erro ao acessar a câmera: ", error);
-                alert("Não foi possível acessar a câmera. Por favor, verifique as permissões no seu navegador.");
+                alert("Não foi possível acessar a câmera.");
             });
-
     } else {
-        // Se o navegador não for compatível, informa o usuário.
         alert("Seu navegador não suporta o acesso à câmera.");
     }
-});  
+
+    // Evento de clique no botão de disparo da câmera
+    shutterButton.addEventListener('click', () => {
+        
+        // Atraso de 1 segundo para simular a captura da foto.
+        setTimeout(() => {
+            
+            // O código abaixo só será executado APÓS o atraso de 1 segundo.
+            cameraContent.style.display = 'none'; // Esconde o conteúdo da câmera
+            loadingScreen.classList.add('active'); // Mostra a tela de carregamento
+
+            // A lógica de análise de 5 segundos continua aqui dentro, como antes.
+            setTimeout(() => {
+                loadingScreen.classList.remove('active'); 
+                completeScreen.classList.add('active');
+            }, 5000); // 5 segundos da análise
+
+        }, 1000); // Atraso de 1 segundo (1000ms) para a "captura"
+    });
+
+    // Evento de clique no botão "Voltar ao Início"
+    restartButton.addEventListener('click', () => {
+        completeScreen.classList.remove('active');
+        cameraContent.style.display = 'flex'; // Mostra o conteúdo da câmera novamente
+    });
+});
